@@ -1,0 +1,4 @@
+---
+gitlab_github_client_id: "xxx"
+gitlab_github_client_secret: "xxx"
+gitlab_hostname: 'localhost:3080'

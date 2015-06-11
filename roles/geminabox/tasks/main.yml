@@ -1,0 +1,25 @@
+---
+- name: Install gem in a box
+  shell: sudo -i gem install {{item}}
+  with_items:
+    - geminabox
+    - unicorn
+
+- file: path="{{geminabox_folder}}"
+        owner=betterplace mode=0755
+        state=directory
+
+- file: path="{{geminabox_folder}}/data"
+        owner=betterplace mode=0755
+        state=directory
+
+- name: Install geminabox config.ru
+  template: src=config.ru.j2 d
+            dest="{{geminabox_folder}}/config.ru"
+            owner=betterplace mode=0644
+
+- name: Create runit run script
+  template:
+    src=run.j2
+    dest=/etc/sv/geminabox/run
+    mode=0755

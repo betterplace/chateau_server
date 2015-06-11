@@ -1,6 +1,11 @@
 - hosts: default
   sudo: yes
   roles:
-    - base_setup
-    - chruby
-    - gem_mirror
+     - base_setup
+     - squid
+     - devops_access
+     - chruby
+     - runit
+     - gem_mirror
+     - gitlab
+     - geminabox

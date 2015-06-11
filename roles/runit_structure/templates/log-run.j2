@@ -1,0 +1,4 @@
+#!/bin/sh
+
+mkdir -p /var/log/{{runit_name}}/
+exec svlogd -ttt /var/log/{{runit_name}}/

@@ -1,0 +1,10 @@
+---
+- name: Install squid
+  yum: pkg=squid state=latest
+
+- name: Install squid config
+  template: src=squid.conf.j2 dest=/etc/squid/squid.conf
+            owner=root group=squid mode=640
+  notify: restart squid
+
+

@@ -1,0 +1,10 @@
+---
+
+# The following actually runs chef, takes over parts of the
+# machine and sets up unicorn and nginx to run through runit,
+# amongst other things
+- name: reconfigure gitlab
+  command: '/usr/bin/gitlab-ctl reconfigure'
+
+- name: restart gitlab
+  command: '/usr/bin/gitlab-ctl restart'

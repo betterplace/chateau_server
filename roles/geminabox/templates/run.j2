@@ -1,0 +1,10 @@
+#!/bin/sh
+
+export PATH=/opt/local/ruby/current/bin:$PATH
+export RAILS_ENV=production
+
+cd "{{geminabox_folder}}"
+test -f /etc/profile.d/chruby.sh && source /etc/profile.d/chruby.sh
+exec 2>&1
+exec chpst -u betterplace unicorn -p 9030
+

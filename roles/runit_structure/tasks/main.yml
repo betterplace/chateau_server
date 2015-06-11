@@ -1,0 +1,29 @@
+# This role prepares a runit folder structure.
+# The run script itself has to be written by
+# the caller.
+---
+- name: Create runit service directory
+  file:
+    path=/etc/sv/{{runit_name}}/log
+    state=directory
+
+- name: Create runit supervise directory
+  file:
+    path={{item}}
+    state=directory
+    mode=0700
+  with_items:
+    - "/etc/sv/{{runit_name}}/supervise"
+    - "/etc/sv/{{runit_name}}/log/supervise"
+
+- name: Create runit log run script
+  template:
+    src=log-run.j2
+    dest=/etc/sv/{{runit_name}}/log/run
+    mode=0755
+
+- name: Link service
+  file:
+    src=/etc/sv/{{runit_name}}
+    dest=/etc/service/{{runit_name}}
+    state=link

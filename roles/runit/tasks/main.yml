@@ -1,0 +1,29 @@
+---
+- name: Install rpm build tools and dependencies
+  yum: pkg={{item}} state=latest
+  with_items:
+    - rpmdevtools
+    - glibc-static
+
+- name: Clone runit build repo
+  git:
+    repo=https://github.com/betterplace/runit-rpm
+    dest=/opt/build/runit-rpm
+    version=b8e14f706165cd0e2d6d1ec6681d7efbfcd58ce9
+
+- name: Check runit rpm existence
+  stat: path=/root/rpmbuild/RPMS/x86_64/runit-2.1.2-1.el6.x86_64.rpm
+  register: runit_rpm_exists
+
+- name: Execute runit build script
+  shell: ./build.sh chdir=/opt/build/runit-rpm
+  when: runit_rpm_exists.stat.exists == false
+
+- name: Install runit rpm
+  yum: pkg=/root/rpmbuild/RPMS/x86_64/runit-2.1.2-1.el6.x86_64.rpm state=installed
+
+- name: Ensure sv and service directory exists
+  file: path=/etc/{{item}} state=directory
+  with_items:
+    - sv
+    - service

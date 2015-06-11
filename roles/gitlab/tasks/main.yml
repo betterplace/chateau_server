@@ -1,0 +1,15 @@
+---
+- name: Installing gitlab repo
+  template: src=gitlab.repo.j2
+    dest=/etc/yum.repos.d/gitlab_gitlab-ce.repo
+            mode=0644 owner=root group=root
+
+- name: Install gitlab
+  yum: pkg=gitlab-ce state=latest update_cache=yes
+
+- name: Install gitlab config
+  template: src=gitlab.rb.j2 dest=/etc/gitlab/gitlab.rb
+            mode=0600 owner=root group=root
+  notify:
+    - reconfigure gitlab
+    - restart gitlab
