@@ -1,0 +1,43 @@
+---
+- yum: name="@Development tools" state=latest update_cache=yes
+- yum: name="libselinux-python" state=latest update_cache=yes
+
+- file: path="{{ ruby_build_dir }}/chruby" state=directory
+
+- name: Download chruby tarball
+  get_url: url=https://github.com/postmodern/chruby/archive/v{{ chruby_version }}.tar.gz
+           dest={{ ruby_build_dir }}/chruby-{{ chruby_version }}.tar.gz
+- name: Unpack chruby tarball
+  unarchive: src={{ ruby_build_dir }}/chruby-{{ chruby_version }}.tar.gz
+             dest={{ ruby_build_dir }}
+             copy=no
+
+- name: Download ruby-install tarball
+  get_url: url=https://github.com/postmodern/ruby-install/archive/v{{ ruby_install_version }}.tar.gz
+           dest={{ ruby_build_dir }}/ruby-install-{{ ruby_install_version }}.tar.gz
+- name: Unpack ruby-install
+  unarchive: src={{ ruby_build_dir }}/ruby-install-{{ ruby_install_version }}.tar.gz
+    dest={{ ruby_build_dir }}
+    copy=no
+
+- name: Install chruby
+  shell: make install
+  args:
+    chdir: "{{ ruby_build_dir }}/chruby-{{ chruby_version }}"
+    creates: /usr/local/share/chruby/chruby.sh
+
+- name: Install ruby-install
+  shell: make install
+  args:
+    chdir: "{{ ruby_build_dir }}/ruby-install-{{ ruby_install_version }}"
+    creates: /usr/local/bin/ruby-install
+
+- name: Enable chruby system-wide
+  template: src=chruby.sh
+            dest=/etc/profile.d/chruby.sh
+            owner=root group=root mode=0644
+
+- name: Install ruby
+  shell: /usr/local/bin/ruby-install ruby {{ default_ruby_version }}
+  args:
+    creates: /opt/rubies/ruby-{{ default_ruby_version }}/bin/ruby

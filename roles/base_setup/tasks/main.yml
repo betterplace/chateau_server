@@ -1,0 +1,12 @@
+- name: Install nginx official repo
+  template: src=nginx.repo.j2
+            dest=/etc/yum.repos.d/nginx.repo
+            owner=root group=root mode=0644
+
+- yum: pkg={{ item }} state=latest update_cache=yes
+  with_items:
+    - vim
+    - mysql-server
+    - git
+    - nginx
+

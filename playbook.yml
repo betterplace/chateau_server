@@ -1,0 +1,6 @@
+- hosts: default
+  sudo: yes
+  roles:
+    - base_setup
+    - chruby
+    - gem_mirror
